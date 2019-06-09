@@ -1,9 +1,12 @@
 #----------------------------------------------------------------------
 # utils.R         Suite of functions to process backtracking files
 #----------------------------------------------------------------------
-# getSummary       Get summary data for each particle from a trackpy file
+# getSummary      Get summary data for each particle from a trackpy file
 # mapTracks       Plot map with particles from a trackpy file
+# plotDensity     Plot density map
+# plotOrigin      Plot map with origin locations
 # trackpy2df      Convert trackpy file into data frame
+# rcount          Raster map counting the number of particles
 
 
 
@@ -77,52 +80,6 @@ mapTracks  <- function (data, title = NULL){
 #-----------------------------------------------------------------
 
 
-#------------------------------------------------------------------
-# trackpy2df      Convert trackpy file into data frame
-#------------------------------------------------------------------
-track2df <- function(ncfile){
-  # Input is a nc file from trackpy
-  # output is a data.frame
-  
-  # Load dependencies
-  require(ncdf4)
-  
-  # Open netcdf
-  nc <- nc_open(ncfile)  # open in write mode to store new data
-  
-  # Get global data
-  id <- nc$dim$ntrac$vals  # virtual particle id
-  tp <- length(id)  # number of virtual particles
-  ts <- nc$dim$nt$len  # number of time steps
-  
-  # Get track data for all particles (whole matrix)
-  mlat <- ncvar_get(nc, varid="latp", start=c(1,1), count=c(ts,tp))  # [nt=201,ntrac=959], [nt,ntrac]   
-  mlon <- ncvar_get(nc, varid="lonp", start=c(1,1), count=c(ts,tp))  # [nt=201,ntrac=959]
-  mt <- ncvar_get(nc, varid="tp", start=c(1,1), count=c(ts,tp))   # [nt=201,ntrac=959]
-  
-  # close nc
-  nc_close(nc)
-  
-  # Convert to data.frame
-  lon <- as.vector(mlon[,])
-  lat <- as.vector(mlat[,])
-  time <- as.vector(mt[,])
-  id <- rep(id, each=ts)
-  dt <- data.frame(id, time, lon, lat)
-  
-  # filter NA data (beached particles)
-  # trackpy assigns NA once the particle reaches the coastline
-  na_lon <- which(is.na(dt$lon))
-  dt <- dt[-na_lon,]
-  
-  # Convert time to POSIXct
-  dt$time <- as.POSIXct(dt$time, origin = "1968-05-23", tz = "UTC")  # seconds since 1968-05-23 00:00:00 GMT
-  
-  # return data.frame
-  return(dt)
-}
-#------------------------------------------------------------------
-
 #-----------------------------------------------------------------
 # plotDensity     Plot density map
 #-----------------------------------------------------------------
@@ -182,6 +139,53 @@ plotOrigin  <- function (data, title = NULL){
   return(p)
 }
 #-----------------------------------------------------------------
+
+
+#------------------------------------------------------------------
+# trackpy2df      Convert trackpy file into data frame
+#------------------------------------------------------------------
+track2df <- function(ncfile){
+  # Input is a nc file from trackpy
+  # output is a data.frame
+  
+  # Load dependencies
+  require(ncdf4)
+  
+  # Open netcdf
+  nc <- nc_open(ncfile)  # open in write mode to store new data
+  
+  # Get global data
+  id <- nc$dim$ntrac$vals  # virtual particle id
+  tp <- length(id)  # number of virtual particles
+  ts <- nc$dim$nt$len  # number of time steps
+  
+  # Get track data for all particles (whole matrix)
+  mlat <- ncvar_get(nc, varid="latp", start=c(1,1), count=c(ts,tp))  # [nt=201,ntrac=959], [nt,ntrac]   
+  mlon <- ncvar_get(nc, varid="lonp", start=c(1,1), count=c(ts,tp))  # [nt=201,ntrac=959]
+  mt <- ncvar_get(nc, varid="tp", start=c(1,1), count=c(ts,tp))   # [nt=201,ntrac=959]
+  
+  # close nc
+  nc_close(nc)
+  
+  # Convert to data.frame
+  lon <- as.vector(mlon[,])
+  lat <- as.vector(mlat[,])
+  time <- as.vector(mt[,])
+  id <- rep(id, each=ts)
+  dt <- data.frame(id, time, lon, lat)
+  
+  # filter NA data (beached particles)
+  # trackpy assigns NA once the particle reaches the coastline
+  na_lon <- which(is.na(dt$lon))
+  dt <- dt[-na_lon,]
+  
+  # Convert time to POSIXct
+  dt$time <- as.POSIXct(dt$time, origin = "1968-05-23", tz = "UTC")  # seconds since 1968-05-23 00:00:00 GMT
+  
+  # return data.frame
+  return(dt)
+}
+#------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------
