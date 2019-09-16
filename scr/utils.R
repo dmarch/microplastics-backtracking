@@ -48,7 +48,7 @@ getSummary <- function(df){
 #-----------------------------------------------------------------
 # mapTracks       Plot map with particles from a trackpy file
 #-----------------------------------------------------------------
-mapTracks  <- function (data, title = NULL){
+mapTracks  <- function (data, extend = 0, title = NULL){
   
   # Load libraries and dependencies
   library(ggplot2)
@@ -58,8 +58,8 @@ mapTracks  <- function (data, title = NULL){
   wm <- suppressMessages(fortify(countriesHigh))
   
   ### Define extension for plot
-  xl <- extendrange(data$lon, f = 0.8)
-  yl <- extendrange(data$lat, f = 0.8)
+  xl <- extendrange(data$lon, f = extend)
+  yl <- extendrange(data$lat, f = extend)
   
   ### Plot
   p <- ggplot() +
