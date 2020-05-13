@@ -1,5 +1,8 @@
 # microplastics-backtracking
 
+[![DOI](https://zenodo.org/badge/191036408.svg)](https://zenodo.org/badge/latestdoi/191036408)
+
+
 Process and analyse backtracking trajectories from microplastics
 
 
