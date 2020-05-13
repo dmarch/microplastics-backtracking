@@ -5,7 +5,12 @@ Process and analyse backtracking trajectories from microplastics
 
 ## Description
 
-This repository accompanies the article "". It contains the R code to post-process backtracking trajectories of virtual particles that represent microplastics. Microplastic samples were collected by the Spanish Institute of Oceanography. Then, numerical simulations were performed by the Balearic Islands Coastal Observing and Forecasting System.
+This repository provides the R code that accompanies the article:
+
+Compa M, Alomar C, Mourre B, March D, Tintoré J, Deudero S. Nearshore spatio-temporal sea surface trawls of plastic debris in the
+Balearic Islands. Marine Environmental Research. 2020. 158, 104945. [https://doi.org/10.1016/j.marenvres.2020.104945](https://doi.org/10.1016/j.marenvres.2020.104945)
+
+It contains the R code to post-process backtracking trajectories of virtual particles that represent microplastics. Microplastic samples were collected by the Spanish Institute of Oceanography. Then, numerical simulations were performed by the Balearic Islands Coastal Observing and Forecasting System (SOCIB).
 
 
 ## Getting Started
